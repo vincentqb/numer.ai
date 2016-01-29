@@ -22,15 +22,15 @@ train = train.drop(train[train.validation == 1].index)
 ### One-hot encode of categorical variable
 
 # Check train and test have the same categories
-assert( set(train['c1'].unique()) == set(test['c1'].unique()) )
+assert(set(train['c1'].unique()) == set(test['c1'].unique()))
 
 # Encode train column, then drop original column
 train_dummies = pd.get_dummies(train['c1'])
-train_num = pd.concat( (train.drop('c1', axis = 1), train_dummies.astype(int)), axis = 1 )
+train_num = pd.concat((train.drop('c1', axis = 1), train_dummies.astype(int)), axis = 1)
 
 # Encode test column, then drop original column
 test_dummies = pd.get_dummies(test['c1'])
-test_num = pd.concat( (test.drop('c1', axis = 1), test_dummies.astype(int)), axis = 1 )
+test_num = pd.concat((test.drop('c1', axis = 1), test_dummies.astype(int)), axis = 1)
 
 ### Select classifier
 
