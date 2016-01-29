@@ -5,6 +5,8 @@
 import pandas as pd
 from time import clock
 
+### Load and prepare data
+
 train_file = 'dataset/numerai_training_data.csv'
 
 start = clock()
@@ -19,8 +21,7 @@ train_frame.drop('validation', axis = 1 , inplace = True)
 label = train_frame['target']
 train_frame.drop('target', axis = 1, inplace = True)
 
-### One-hot encode of categorical variable
-
+# One-hot encode of categorical variable
 # Encode column in train, then drop original column
 train_dummies = pd.get_dummies(train_frame['c1'])
 train = pd.concat((train_frame.drop('c1', axis = 1), train_dummies.astype(int)), axis = 1)
@@ -43,7 +44,8 @@ from sklearn.cross_validation import cross_val_score
 for clf in clf_list:
     start = clock()
     scores = cross_val_score(clf, train, label, scoring = 'roc_auc', cv = 10, verbose = 1)
-    print("Performed {:d}-fold cross validation in {:.0f} seconds with ROC AUC: mean {:0.4f} std {:0.4f}.".format(
+    print(
+        "Performed {:d}-fold cross validation in {:.0f} seconds with ROC AUC: mean {:0.4f} std {:0.4f}.".format(
         len(scores), clock() - start, scores.mean(), scores.std() ))
 
 """
