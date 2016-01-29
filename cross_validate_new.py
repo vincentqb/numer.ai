@@ -43,11 +43,14 @@ from sklearn.cross_validation import cross_val_score
 for clf in clf_list:
     start = clock()
     scores = cross_val_score(clf, train, label, scoring = 'roc_auc', cv = 10, verbose = 1)
-    print("Performed {:d}-fold cross validation in {:.0f} seconds with ROC AUC {:0.4f} mean {:0.4f} std.".format(
+    print("Performed {:d}-fold cross validation in {:.0f} seconds with ROC AUC: mean {:0.4f} std {:0.4f}.".format(
         len(scores), clock() - start, scores.mean(), scores.std() ))
 
 """
 Results
+
+LR()
+mean 0.5254 std 0.0044
 
 RF(n_estimators = 10, verbose = True)
 mean 0.5092 std 0.0043
