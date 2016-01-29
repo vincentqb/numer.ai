@@ -32,9 +32,9 @@ rf0 = RF(n_estimators = 10, verbose = True)
 rf1 = RF(n_estimators = 1000, verbose = True)
 
 from sklearn.linear_model import LogisticRegression as LR
-lf = LR()
+lr = LR()
 
-clf_list = [rf0, rf1, lf]
+clf_list = [lr, rf0, rf1]
 
 ### Cross validation
 
