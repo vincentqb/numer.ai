@@ -28,13 +28,13 @@ train = pd.concat((train_frame.drop('c1', axis = 1), train_dummies.astype(int)),
 ### Select classifiers
 
 from sklearn.ensemble import RandomForestClassifier as RF
-n_trees = 1000
-rf = RF(n_estimators = n_trees, verbose = True)
+rf0 = RF(n_estimators = 10, verbose = True)
+rf1 = RF(n_estimators = 1000, verbose = True)
 
 from sklearn.linear_model import LogisticRegression as LR
 lf = LR()
 
-clf_list = [rf, lf]
+clf_list = [rf0, rf1, lf]
 
 ### Cross validation
 
@@ -42,6 +42,6 @@ from sklearn.cross_validation import cross_val_score
 
 for clf in clf_list:
     start = clock()
-    scores = cross_val_score(clf, train, label.target, scoring = 'roc_auc', cv = 10, verbose = 1)
-    print("Performed {:d}-fold cross validation in {:.0f} seconds with ROC AUC {:0.4f} +/- {:0.4f}.".format(
+    scores = cross_val_score(clf, train, label, scoring = 'roc_auc', cv = 10, verbose = 1)
+    print("Performed {:d}-fold cross validation in {:.0f} seconds with ROC AUC {:0.4f} mean {:0.4f} std.".format(
         len(scores), clock() - start, scores.mean(), scores.std() ))
