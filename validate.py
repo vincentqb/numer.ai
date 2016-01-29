@@ -61,4 +61,3 @@ print "AUC: {:.2%}, accuracy: {:.2%}".format( auc, acc )
 	
 # AUC: 51.40%, accuracy: 51.14%	/ 100 trees
 # AUC: 52.16%, accuracy: 51.62%	/ 1000 trees
-	
