@@ -26,33 +26,21 @@ iv = data.validation == 1
 test_data = data[iv].copy()
 train_data = data[~iv].copy()
 
-# Separate train data and label
+# Separate data and label
 train_label = train_data['target']
 train_data.drop('target', axis = 1, inplace = True)
+test_label = test_data['target']
+test_data.drop('target', axis = 1, inplace = True)
 
 # Validation flag no longer needed
 train.drop( 'validation', axis = 1 , inplace = True )
 
-# move the target column to front
-cols = train.columns
-cols = cols.insert( 0, 'target' )
-cols = cols[:-1]
+### One-hot encode of categorical variable
 
-train = train[cols]
-val = val[cols]
-
-# train.to_csv( 'data/train_v.csv', index = False )
-# val.to_csv( 'data/test_v.csv', index = None )
-
-# encode the categorical variable as one-hot, drop the original column afterwards
-
-train_dummies = pd.get_dummies( train.c1 )
-train_num = pd.concat(( train.drop( 'c1', axis = 1 ), train_dummies.astype( int )), axis = 1 )
-# train_num.to_csv( 'data/train_v_num.csv', index = False )
-
-val_dummies = pd.get_dummies( val.c1 )
-val_num = pd.concat(( val.drop( 'c1', axis = 1 ), val_dummies.astype(int) ), axis = 1 )
-# val_num.to_csv( 'data/test_v_num.csv', index = False )
+# One-hot encode of categorical variable
+# Encode column in train, then drop original column
+train_dummies = pd.get_dummies(train_data['c1'])
+train = pd.concat((train_data.drop('c1', axis = 1), train_dummies.astype(int)), axis = 1)
 
 # train, predict, evaluate
 
