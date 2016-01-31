@@ -47,7 +47,21 @@ from sklearn.ensemble import ExtraTreesClassifier
 etc2 = ExtraTreesClassifier(n_estimators = 100, max_depth = None, min_samples_split = 1, random_state = 0)
 etc3 = ExtraTreesClassifier(n_estimators = 1000, max_depth = None, min_samples_split = 1, random_state = 0)
 
-clf_list = [lr, lsvc, sgd, rf1, rf2, rf3, etc2, etc3]
+# Classifiers from Scikit Flow
+# Optimizer choices: SGD, Adam, Adagrad
+
+from skflow import TensorFlowLinearClassifier
+tflc = TensorFlowLinearClassifier(batch_size = 256, steps = 1400, learning_rate = 0.01, optimizer = 'Adagrad')
+
+from skflow import TensorFlowLinearRegressor
+tflr = TensorFlowLinearRegressor(batch_size = 256, steps = 1400, learning_rate = 0.01, optimizer = 'Adagrad')
+
+from skflow import TensorFlowDNNClassifier
+tfdnnc = TensorFlowDNNClassifier(hidden_units = [100, 200, 200, 200, 100],
+                                    batch_size = 256, steps = 1000, learning_rate = 0.01, optimizer = 'Adagrad')
+
+# clf_list = [lr, lsvc, sgd, rf1, rf2, rf3, etc2, etc3]
+clf_list = [tflc, tflr, tfdnnc]
 
 ### Cross validation
 
