@@ -49,24 +49,6 @@ etc3 = ExtraTreesClassifier(n_estimators = 1000, max_depth = None, min_samples_s
 
 clf_list = [lr, lsvc, sgd, rf1, rf2, rf3, etc2, etc3]
 
-### Optimize classifer's parameters
-
-def grid_search(train, label, clf, params):
-    from sklearn.grid_search import GridSearchCV
-    
-    # Run exhaustive grid search
-    start = clock()
-    gs = GridSearchCV(estimator = clf, param_grid = params, n_jobs = 2)
-    gs.fit(train, label)
-    print("Parameter optimized {} yielding {:.4f} in {:.0f} seconds.".format(
-        gs.best_params_, gs.best_score_, clock() - start))
-    
-# Parameter space to search
-params = [{'C': np.logspace(-2, 3)}]
-grid_search(train, label, lr, params)
-
-exit()
-
 ### Cross validation
 
 from sklearn.cross_validation import cross_val_score
