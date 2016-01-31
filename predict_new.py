@@ -10,13 +10,13 @@ test_file = 'dataset/numerai_tournament_data.csv'
 predict_file = 'predict.csv'
 
 start = clock()
-train = pd.read_csv(train_file)
-test = pd.read_csv(test_file)
+train_data = pd.read_csv(train_file)
+test_data = pd.read_csv(test_file)
 print('Loaded {:d} train and {:d} test entries in {:.0f} seconds.'.format( 
-    len(train), len(test), clock() - start))
+    len(train_data), len(test_data), clock() - start))
 
 # No need for validation flag for final training and extrapolation
-train.drop('validation', axis = 1 , inplace = True)
+train_data.drop('validation', axis = 1 , inplace = True)
 
 # Separate data and target label
 train_target = train_data['target']
