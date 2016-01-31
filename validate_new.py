@@ -54,10 +54,14 @@ rf = RF(n_estimators = 10, verbose = True)
 
 ### Fit and extrapolate
 
+start = clock()
 rf.fit(train_data, train_target)
+print("Fitted in {:.0f} seconds.".format(clock() - start))
 
+start = clock()
 predict = rf.predict_proba(test_data)
 predict_bin = rf.predict(test_data)
+print("Extrapolated in {:.0f} seconds.".format(clock() - start))
 
 ### Compute ROC AUC and accuracy
 
