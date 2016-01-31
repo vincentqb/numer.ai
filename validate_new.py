@@ -52,22 +52,40 @@ test_data = pd.concat((test_data.drop('c1', axis = 1), test_dummies.astype(int))
 from sklearn.ensemble import RandomForestClassifier as RF
 rf = RF(n_estimators = 10, verbose = True)
 
-### Fit and extrapolate
+# Classifiers from Scikit Flow
+# Optimizer choices: SGD, Adam, Adagrad
 
-start = clock()
-rf.fit(train_data, train_target)
-print("Fitted in {:.0f} seconds.".format(clock() - start))
+from skflow import TensorFlowLinearClassifier
+tflc = TensorFlowLinearClassifier(batch_size = 256, steps = 1400, learning_rate = 0.01, optimizer = 'Adagrad')
 
-start = clock()
-predict = rf.predict_proba(test_data)
-predict_bin = rf.predict(test_data)
-print("Extrapolated in {:.0f} seconds.".format(clock() - start))
+from skflow import TensorFlowLinearRegressor
+tflr = TensorFlowLinearRegressor(batch_size = 256, steps = 1400, learning_rate = 0.01, optimizer = 'Adagrad')
 
-### Compute ROC AUC and accuracy
+from skflow import TensorFlowDNNClassifier
+tfdnnc = TensorFlowDNNClassifier(hidden_units = [100, 200, 200, 200, 100],
+                                    batch_size = 256, steps = 1000, learning_rate = 0.01, optimizer = 'Adagrad')
 
-acc = accuracy(test_target.values, predict_bin)
-auc = AUC(test_target.values, predict[:,1])
-print "AUC: {:.2%}. Accuracy: {:.2%}.".format(auc, acc)
+clf_list = [rf]
+
+### Fit, extrapolate, measure error
+
+for clf in clf_list:
+
+    # Fit
+    start = clock()
+    rf.fit(train_data, train_target)
+    print("Fitted in {:.0f} seconds.".format(clock() - start))
+
+    # Extrapolate
+    start = clock()
+    predict = rf.predict_proba(test_data)
+    predict_bin = rf.predict(test_data)
+    print("Extrapolated in {:.0f} seconds.".format(clock() - start))
+    
+    # Compute ROC AUC and accuracy
+    acc = accuracy(test_target.values, predict_bin)
+    auc = AUC(test_target.values, predict[:,1])
+    print "AUC: {:.2%}. Accuracy: {:.2%}.".format(auc, acc)
 
 """
 Results
