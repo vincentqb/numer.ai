@@ -62,25 +62,6 @@ for clf in clf_list:
 """
 Results
 
-LR()
-Performed 10-fold cross validation in 3 seconds with ROC AUC: mean 0.5254 std 0.0044.
-
-RF(n_estimators = 10, verbose = True)
-mean 0.5092 std 0.0043
-
-LinearSVC(tol = 0.01, C = 1)
-Performed 10-fold cross validation in 111 seconds with ROC AUC: mean 0.5085 std 0.0116.
-
-SGDClassifier()
-Performed 10-fold cross validation in 3 seconds with ROC AUC: mean 0.5002 std 0.0135.
-
-RF(n_estimators = 100, verbose = True)
-Performed 10-fold cross validation in 35 seconds with ROC AUC: mean 0.5125 std 0.0101.
-
-RF(n_estimators = 1000, verbose = True)
-Performed 10-fold cross validation in 348 seconds with ROC AUC: mean 0.5227 std 0.0092.
-
-
 LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
           intercept_scaling=1, penalty=l2, random_state=None, tol=0.0001)
 Performed 10-fold cross validation in 3 seconds with ROC AUC: mean 0.5254 std 0.0044.
