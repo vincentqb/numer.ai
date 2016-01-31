@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
-"cross-validation"
+"""
+Cross-validation with a few classifiers.
+"""
 
 import pandas as pd
 import numpy as np
