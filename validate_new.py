@@ -43,7 +43,7 @@ test_data.drop('target', axis = 1, inplace = True)
 train_dummies = pd.get_dummies(train_data['c1'])
 train_data = pd.concat((train_data.drop('c1', axis = 1), train_dummies.astype(int)), axis = 1)
 
-# Encode column in train, then drop original column
+# Encode column in test, then drop original column
 test_dummies = pd.get_dummies(test_data['c1'])
 test_data = pd.concat((test_data.drop('c1', axis = 1), test_dummies.astype(int)), axis = 1)
 
