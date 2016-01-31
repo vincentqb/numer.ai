@@ -6,10 +6,6 @@
 import pandas as pd
 from time import clock
 
-from sklearn.ensemble import RandomForestClassifier as RF
-from sklearn.metrics import roc_auc_score as AUC
-from sklearn.metrics import accuracy_score as accuracy
-
 ### Load data
 
 input_file = 'dataset/numerai_training_data.csv'
@@ -68,6 +64,9 @@ tfdnnc = TensorFlowDNNClassifier(hidden_units = [100, 200, 200, 200, 100],
 clf_list = [rf]
 
 ### Fit, extrapolate, measure error
+
+from sklearn.metrics import roc_auc_score as AUC
+from sklearn.metrics import accuracy_score as accuracy
 
 for clf in clf_list:
 
