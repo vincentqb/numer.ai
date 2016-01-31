@@ -42,9 +42,6 @@ sgd = SGDClassifier()
 from sklearn.svm import LinearSVC
 lsvc = LinearSVC(tol = 0.01, C = 1)
 
-# from sklearn.svm import SVC
-# svc = SVC()
-
 clf_list = [lr, lsvc, sgd, rf1, rf2, rf3]
 
 ### Cross validation
