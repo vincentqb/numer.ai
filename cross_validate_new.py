@@ -29,13 +29,23 @@ train = pd.concat((train_frame.drop('c1', axis = 1), train_dummies.astype(int)),
 ### Select classifiers
 
 from sklearn.ensemble import RandomForestClassifier as RF
-rf0 = RF(n_estimators = 10, verbose = True)
-rf1 = RF(n_estimators = 1000, verbose = True)
+rf1 = RF(n_estimators = 10, verbose = True)
+rf2 = RF(n_estimators = 100, verbose = True)
+# rf3 = RF(n_estimators = 1000, verbose = True)
 
 from sklearn.linear_model import LogisticRegression as LR
 lr = LR()
 
-clf_list = [lr, rf0, rf1]
+from sklearn.linear_model import SGDClassifier
+sgd = SGDClassifier()
+
+from sklearn.svm import LinearSVC
+lsvc = LinearSVC(tol = 0.01, C = 1)
+
+from sklearn.svm import SVC
+svc = SVC()
+
+clf_list = [lr, lsvc, svc, sgd, rf1, rf2]
 
 ### Cross validation
 
