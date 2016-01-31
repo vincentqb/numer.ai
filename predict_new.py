@@ -12,7 +12,7 @@ predict_file = 'predict.csv'
 start = clock()
 train = pd.read_csv(train_file)
 test = pd.read_csv(test_file)
-print('Loaded {:d} train and {:d} entries in {:.0f} seconds.'.format( 
+print('Loaded {:d} train and {:d} test entries in {:.0f} seconds.'.format( 
     len(train), len(test), clock() - start))
 
 # No need for validation flag for final training and extrapolation
