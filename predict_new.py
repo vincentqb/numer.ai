@@ -38,7 +38,7 @@ test_data = pd.concat((test_data.drop('c1', axis = 1), test_dummies.astype(int))
 ### Select classifier
 
 from sklearn.ensemble import RandomForestClassifier as RF
-clf = rf(n_estimators = 1000, verbose = True)
+clf = RF(n_estimators = 1000, verbose = True)
 
 ### Fit training data
 
