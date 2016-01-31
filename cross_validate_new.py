@@ -79,4 +79,42 @@ Performed 10-fold cross validation in 35 seconds with ROC AUC: mean 0.5125 std 0
 
 RF(n_estimators = 1000, verbose = True)
 Performed 10-fold cross validation in 348 seconds with ROC AUC: mean 0.5227 std 0.0092.
+
+
+LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+          intercept_scaling=1, penalty=l2, random_state=None, tol=0.0001)
+Performed 10-fold cross validation in 3 seconds with ROC AUC: mean 0.5254 std 0.0044.
+
+LinearSVC(C=1, class_weight=None, dual=True, fit_intercept=True,
+     intercept_scaling=1, loss=l2, multi_class=ovr, penalty=l2,
+     random_state=None, tol=0.01, verbose=0)
+Performed 10-fold cross validation in 116 seconds with ROC AUC: mean 0.5051 std 0.0186.
+
+SGDClassifier(alpha=0.0001, class_weight=None, epsilon=0.1, eta0=0.0,
+       fit_intercept=True, l1_ratio=0.15, learning_rate=optimal,
+       loss=hinge, n_iter=5, n_jobs=1, penalty=l2, power_t=0.5,
+       random_state=None, rho=None, shuffle=False, verbose=0,
+       warm_start=False)
+Performed 10-fold cross validation in 1 seconds with ROC AUC: mean 0.5002 std 0.0135.
+
+RandomForestClassifier(bootstrap=True, compute_importances=None,
+            criterion=gini, max_depth=None, max_features=auto,
+            min_density=None, min_samples_leaf=1, min_samples_split=2,
+            n_estimators=10, n_jobs=1, oob_score=False, random_state=None,
+            verbose=True)
+Performed 10-fold cross validation in 35 seconds with ROC AUC: mean 0.5057 std 0.0058.
+
+RandomForestClassifier(bootstrap=True, compute_importances=None,
+            criterion=gini, max_depth=None, max_features=auto,
+            min_density=None, min_samples_leaf=1, min_samples_split=2,
+            n_estimators=100, n_jobs=1, oob_score=False, random_state=None,
+            verbose=True)
+Performed 10-fold cross validation in 351 seconds with ROC AUC: mean 0.5213 std 0.0082.
+
+RandomForestClassifier(bootstrap=True, compute_importances=None,
+            criterion=gini, max_depth=None, max_features=auto,
+            min_density=None, min_samples_leaf=1, min_samples_split=2,
+            n_estimators=1000, n_jobs=1, oob_score=False,
+            random_state=None, verbose=True)
+Performed 10-fold cross validation in 3307 seconds with ROC AUC: mean 0.5279 std 0.0054.
 """
