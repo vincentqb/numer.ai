@@ -73,5 +73,6 @@ print "AUC: {:.2%}. Accuracy: {:.2%}.".format(auc, acc)
 Results
 
 RF(n_estimators = 10, verbose = True)
-AUC: 50.78%. Accuracy: 50.43%.
+Fitted in 3 seconds. Extrapolated in 0 seconds.
+AUC: 50.67%. Accuracy: 49.67%.
 """
