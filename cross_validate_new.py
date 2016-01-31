@@ -42,7 +42,12 @@ sgd = SGDClassifier()
 from sklearn.svm import LinearSVC
 lsvc = LinearSVC(tol = 0.01, C = 1)
 
-clf_list = [lr, lsvc, sgd, rf1, rf2, rf3]
+from sklearn.ensemble import ExtraTreesClassifier
+etc2 = ExtraTreesClassifier(n_estimators = 100, max_depth = None, min_samples_split = 1, random_state = 0)
+etc3 = ExtraTreesClassifier(n_estimators = 1000, max_depth = None, min_samples_split = 1, random_state = 0)
+
+# clf_list = [lr, lsvc, sgd, rf1, rf2, rf3]
+clf_list = [etc2, etc3]
 
 ### Cross validation
 
@@ -95,4 +100,18 @@ RandomForestClassifier(bootstrap=True, compute_importances=None,
             n_estimators=1000, n_jobs=1, oob_score=False,
             random_state=None, verbose=True)
 Performed 10-fold cross validation in 3307 seconds with ROC AUC: mean 0.5279 std 0.0054.
+
+ExtraTreesClassifier(bootstrap=False, compute_importances=None,
+           criterion=gini, max_depth=None, max_features=auto,
+           min_density=None, min_samples_leaf=1, min_samples_split=1,
+           n_estimators=100, n_jobs=1, oob_score=False, random_state=0,
+           verbose=0)
+Performed 10-fold cross validation in 143 seconds with ROC AUC: mean 0.5228 std 0.0077.
+
+ExtraTreesClassifier(bootstrap=False, compute_importances=None,
+           criterion=gini, max_depth=None, max_features=auto,
+           min_density=None, min_samples_leaf=1, min_samples_split=1,
+           n_estimators=1000, n_jobs=1, oob_score=False, random_state=0,
+           verbose=0)
+Performed 10-fold cross validation in 1433 seconds with ROC AUC: mean 0.5255 std 0.0067.
 """
