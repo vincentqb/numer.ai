@@ -1,47 +1,58 @@
 #!/usr/bin/env python
 
-"Load data, train a random forest, output predictions"
-
 import pandas as pd
+from time import clock
+
+### Load data
+
+train_file = 'dataset/numerai_training_data.csv'
+test_file = 'dataset/numerai_tournament_data.csv'
+predict_file = 'predict.csv'
+
+start = clock()
+train_data = pd.read_csv(train_file)
+test_data = pd.read_csv(test_file)
+print('Loaded {:d} train and {:d} test entries in {:.0f} seconds.'.format( 
+    len(train_data), len(test_data), clock() - start))
+
+# No need for validation flag for final training and extrapolation
+train_data.drop('validation', axis = 1 , inplace = True)
+
+# Separate data and target label
+train_target = train_data['target']
+train_data.drop('target', axis = 1, inplace = True)
+
+### One-hot encode of categorical variable
+
+# Check train and test have the same categories
+assert(set(train_data['c1'].unique()) == set(test_data['c1'].unique()))
+
+# Encode column in train, then drop original column
+train_dummies = pd.get_dummies(train_data['c1'])
+train_data = pd.concat((train_data.drop('c1', axis = 1), train_dummies.astype(int)), axis = 1)
+
+# Encode column in test, then drop original column
+test_dummies = pd.get_dummies(test_data['c1'])
+test_data = pd.concat((test_data.drop('c1', axis = 1), test_dummies.astype(int)), axis = 1)
+
+### Select classifier
+
 from sklearn.ensemble import RandomForestClassifier as RF
+clf = RF(n_estimators = 1000, verbose = True)
 
-train_file = 'data/orig/numerai_training_data.csv'
-test_file = 'data/orig/numerai_tournament_data.csv'
-output_file = 'data/predictions.csv'
+### Fit training data
 
-#
+start = clock()
+clf.fit(train_data, train_target)
+print("Fitted in {:.0f} seconds.".format(clock() - start))
 
-train = pd.read_csv( train_file )
-test = pd.read_csv( test_file )
+### Extrapolate
 
-# no need for validation flag
-train.drop( 'validation', axis = 1 , inplace = True )
+start = clock()
+predict = clf.predict_proba(test_data)
+print("Extrapolated in {:.0f} seconds.".format(clock() - start))
 
-# encode the categorical variable as one-hot, drop the original column afterwards
-# but first let's make sure the values are the same in train and test
+### Save results
 
-assert( set( train.c1.unique()) == set( test.c1.unique()))
-
-train_dummies = pd.get_dummies( train.c1 )
-train_num = pd.concat(( train.drop( 'c1', axis = 1 ), train_dummies.astype( int )), axis = 1 )
-
-test_dummies = pd.get_dummies( test.c1 )
-test_num = pd.concat(( test.drop( 'c1', axis = 1 ), test_dummies.astype(int) ), axis = 1 )
-
-# train and predict
-
-n_trees = 1000
-
-rf = RF( n_estimators = n_trees, verbose = True )
-rf.fit( train_num.drop( 'target', axis = 1 ), train_num.target )
-
-p = rf.predict_proba( test_num.drop( 't_id', axis = 1 ))
-
-# save
-
-test_num['probability'] = p[:,1]
-test_num.to_csv( output_file, columns = ( 't_id', 'probability' ), index = None )
-
-
-
-	
+test_data['probability'] = predict[:,1]
+test_data.to_csv(predict_file, columns = ('t_id', 'probability'), index = None)
