@@ -49,7 +49,8 @@ print("Fitted in {:.0f} seconds.".format(clock() - start))
 ### Extrapolate
 
 start = clock()
-predict = clf.predict_proba(test_data)
+# Don't forget to remove the t_id column!
+predict = clf.predict_proba(test_data.drop('t_id', axis = 1))
 print("Extrapolated in {:.0f} seconds.".format(clock() - start))
 
 ### Save results
