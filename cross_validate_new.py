@@ -53,14 +53,14 @@ etc3 = ExtraTreesClassifier(n_estimators = 1000, max_depth = None, min_samples_s
 # Optimizer choices: SGD, Adam, Adagrad
 
 from skflow import TensorFlowLinearClassifier
-tflc = TensorFlowLinearClassifier(batch_size = 256, steps = 1400, learning_rate = 0.01, optimizer = 'Adagrad')
+tflc = TensorFlowLinearClassifier(n_classes = 1, batch_size = 256, steps = 1400, learning_rate = 0.01, optimizer = 'Adagrad')
 
 from skflow import TensorFlowLinearRegressor
-tflr = TensorFlowLinearRegressor(batch_size = 256, steps = 1400, learning_rate = 0.01, optimizer = 'Adagrad')
+tflr = TensorFlowLinearRegressor(n_classes = 1, batch_size = 256, steps = 1400, learning_rate = 0.01, optimizer = 'Adagrad')
 
 from skflow import TensorFlowDNNClassifier
 tfdnnc = TensorFlowDNNClassifier(hidden_units = [100, 200, 200, 200, 100],
-                                    batch_size = 256, steps = 1000, learning_rate = 0.01, optimizer = 'Adagrad')
+                                    n_classes = 1, batch_size = 256, steps = 1000, learning_rate = 0.01, optimizer = 'Adagrad')
 
 # clf_list = [lr, lsvc, sgd, rf1, rf2, rf3, etc2, etc3]
 clf_list = [tflc, tflr, tfdnnc]
