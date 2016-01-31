@@ -12,17 +12,22 @@ from sklearn.metrics import accuracy_score as accuracy
 
 ### Load data
 
-train_file = 'dataset/numerai_training_data.csv'
+input_file = 'dataset/numerai_training_data.csv'
 
 start = clock()
-data = pd.read_csv(train_file)
+data = pd.read_csv(input_file)
 print('Loaded {:d} entries in {:.0f} seconds.'.format( 
-    len(train), clock() - start))
+    len(data), clock() - start))
 
-# Validation set is more reprensentative of tournament data
+### Validation set is more reprensentative of tournament data
+
+# Identify validation set
+iv = data.validation == 1
+
+# Validation flag no longer needed
+data.drop( 'validation', axis = 1 , inplace = True )
 
 # Split train into test and train
-iv = data.validation == 1
 test_data = data[iv].copy()
 train_data = data[~iv].copy()
 
@@ -32,29 +37,30 @@ train_data.drop('target', axis = 1, inplace = True)
 test_label = test_data['target']
 test_data.drop('target', axis = 1, inplace = True)
 
-# Validation flag no longer needed
-train.drop( 'validation', axis = 1 , inplace = True )
-
 ### One-hot encode of categorical variable
 
-# One-hot encode of categorical variable
 # Encode column in train, then drop original column
 train_dummies = pd.get_dummies(train_data['c1'])
-train = pd.concat((train_data.drop('c1', axis = 1), train_dummies.astype(int)), axis = 1)
+train_data = pd.concat((train_data.drop('c1', axis = 1), train_dummies.astype(int)), axis = 1)
 
-# train, predict, evaluate
+# Encode column in train, then drop original column
+test_dummies = pd.get_dummies(test_data['c1'])
+test_data = pd.concat((test_data.drop('c1', axis = 1), test_dummies.astype(int)), axis = 1)
 
-n_trees = 100
+### Select classifier
 
-rf = RF( n_estimators = n_trees, verbose = True )
-rf.fit( train_num.drop( 'target', axis = 1 ), train_num.target )
+from sklearn.ensemble import RandomForestClassifier as RF
+rf = RF(n_estimators = 10, verbose = True)
 
-p = rf.predict_proba( val_num.drop( 'target', axis = 1 ))
-p_bin = rf.predict( val_num.drop( 'target', axis = 1 ))
+### Fit and extrapolate
 
-acc = accuracy( val_num.target.values, p_bin )
-auc = AUC( val_num.target.values, p[:,1] )
-print "AUC: {:.2%}, accuracy: {:.2%}".format( auc, acc )
-	
-# AUC: 51.40%, accuracy: 51.14%	/ 100 trees
-# AUC: 52.16%, accuracy: 51.62%	/ 1000 trees
+rf.fit(train_data, train_target)
+
+predict = rf.predict_proba(test_data)
+predict_bin = rf.predict(test_data)
+
+### Compute ROC AUC and accuracy
+
+acc = accuracy(target.values, predict_bin)
+auc = AUC(train_target.values, predict[:,1])
+print "AUC: {:.2%}. Accuracy: {:.2%}.".format(auc, acc)
