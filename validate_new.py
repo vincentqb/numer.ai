@@ -64,3 +64,10 @@ predict_bin = rf.predict(test_data)
 acc = accuracy(test_target.values, predict_bin)
 auc = AUC(test_target.values, predict[:,1])
 print "AUC: {:.2%}. Accuracy: {:.2%}.".format(auc, acc)
+
+"""
+Results
+
+RF(n_estimators = 10, verbose = True)
+AUC: 50.78%. Accuracy: 50.43%.
+"""
