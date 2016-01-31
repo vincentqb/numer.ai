@@ -62,14 +62,14 @@ from skflow import TensorFlowDNNClassifier
 tfdnnc = TensorFlowDNNClassifier(hidden_units = [100, 200, 200, 200, 100],
                                     n_classes = 1, batch_size = 256, steps = 1000, learning_rate = 0.01, optimizer = 'Adagrad')
 
-# clf_list = [lr, lsvc, sgd, rf1, rf2, rf3, etc2, etc3]
-clf_list = [tflc, tflr, tfdnnc]
+clfs = [lr, lsvc, sgd, rf1, rf2, rf3, etc2, etc3]
+# clfs = [tflc, tflr, tfdnnc]
 
 ### Cross validation
 
 from sklearn.cross_validation import cross_val_score
 
-for clf in clf_list:
+for clf in clfs:
     print clf
     start = clock()
     scores = cross_val_score(clf, train, label, scoring = 'roc_auc', cv = 10, verbose = 1)

@@ -58,17 +58,17 @@ from skflow import TensorFlowLinearRegressor
 tflr = TensorFlowLinearRegressor(n_classes = 1, batch_size = 256, steps = 1400, learning_rate = 0.01, optimizer = 'Adagrad')
 
 from skflow import TensorFlowDNNClassifier
-tfdnnc = TensorFlowDNNClassifier(hidden_units = [100, 200, 200, 200, 100],
+tfdnnc = TensorFlowDNNClassifier(hidden_units = [100, 200, 200, 200, 200, 200, 100],
                                     n_classes = 1, batch_size = 256, steps = 1000, learning_rate = 0.01, optimizer = 'Adagrad')
 
-clf_list = [rf]
+clfs = [rf, tflc, tflr, tfdnnc]
 
 ### Fit, extrapolate, measure error
 
 from sklearn.metrics import roc_auc_score as AUC
 from sklearn.metrics import accuracy_score as accuracy
 
-for clf in clf_list:
+for clf in clfs:
 
     # Fit
     start = clock()
