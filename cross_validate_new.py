@@ -31,7 +31,7 @@ train = pd.concat((train_frame.drop('c1', axis = 1), train_dummies.astype(int)),
 from sklearn.ensemble import RandomForestClassifier as RF
 rf1 = RF(n_estimators = 10, verbose = True)
 rf2 = RF(n_estimators = 100, verbose = True)
-# rf3 = RF(n_estimators = 1000, verbose = True)
+rf3 = RF(n_estimators = 1000, verbose = True)
 
 from sklearn.linear_model import LogisticRegression as LR
 lr = LR()
@@ -42,16 +42,17 @@ sgd = SGDClassifier()
 from sklearn.svm import LinearSVC
 lsvc = LinearSVC(tol = 0.01, C = 1)
 
-from sklearn.svm import SVC
-svc = SVC()
+# from sklearn.svm import SVC
+# svc = SVC()
 
-clf_list = [lr, lsvc, svc, sgd, rf1, rf2]
+clf_list = [lr, lsvc, sgd, rf1, rf2, rf3]
 
 ### Cross validation
 
 from sklearn.cross_validation import cross_val_score
 
 for clf in clf_list:
+    print clf
     start = clock()
     scores = cross_val_score(clf, train, label, scoring = 'roc_auc', cv = 10, verbose = 1)
     print(
@@ -62,8 +63,20 @@ for clf in clf_list:
 Results
 
 LR()
-mean 0.5254 std 0.0044
+Performed 10-fold cross validation in 3 seconds with ROC AUC: mean 0.5254 std 0.0044.
 
 RF(n_estimators = 10, verbose = True)
 mean 0.5092 std 0.0043
+
+LinearSVC(tol = 0.01, C = 1)
+Performed 10-fold cross validation in 111 seconds with ROC AUC: mean 0.5085 std 0.0116.
+
+SGDClassifier()
+Performed 10-fold cross validation in 3 seconds with ROC AUC: mean 0.5002 std 0.0135.
+
+RF(n_estimators = 100, verbose = True)
+Performed 10-fold cross validation in 35 seconds with ROC AUC: mean 0.5125 std 0.0101.
+
+RF(n_estimators = 1000, verbose = True)
+Performed 10-fold cross validation in 348 seconds with ROC AUC: mean 0.5227 std 0.0092.
 """
