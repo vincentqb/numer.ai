@@ -31,10 +31,10 @@ data.drop( 'validation', axis = 1 , inplace = True )
 test_data = data[iv].copy()
 train_data = data[~iv].copy()
 
-# Separate data and label
-train_label = train_data['target']
+# Separate data and target label
+train_target = train_data['target']
 train_data.drop('target', axis = 1, inplace = True)
-test_label = test_data['target']
+test_target = test_data['target']
 test_data.drop('target', axis = 1, inplace = True)
 
 ### One-hot encode of categorical variable
@@ -61,6 +61,6 @@ predict_bin = rf.predict(test_data)
 
 ### Compute ROC AUC and accuracy
 
-acc = accuracy(target.values, predict_bin)
-auc = AUC(train_target.values, predict[:,1])
+acc = accuracy(test_target.values, predict_bin)
+auc = AUC(test_target.values, predict[:,1])
 print "AUC: {:.2%}. Accuracy: {:.2%}.".format(auc, acc)
