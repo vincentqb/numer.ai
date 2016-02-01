@@ -35,6 +35,7 @@ from sklearn.ensemble import RandomForestClassifier as RF
 rf1 = RF(n_estimators = 10, verbose = True)
 rf2 = RF(n_estimators = 100, verbose = True)
 rf3 = RF(n_estimators = 1000, verbose = True)
+rf4 = RF(n_estimators = 10000, verbose = True)
 
 from sklearn.linear_model import LogisticRegression as LR
 lr = LR()
@@ -62,7 +63,8 @@ from skflow import TensorFlowDNNClassifier
 tfdnnc = TensorFlowDNNClassifier(hidden_units = [100, 200, 200, 200, 100],
                                     n_classes = 1, batch_size = 256, steps = 1000, learning_rate = 0.01, optimizer = 'Adagrad')
 
-clfs = [lr, lsvc, sgd, rf1, rf2, rf3, etc2, etc3]
+# clfs = [lr, lsvc, sgd, rf1, rf2, rf3, rf4, etc2, etc3]
+clfs = [rf4]
 # clfs = [tflc, tflr, tfdnnc]
 
 ### Cross validation
