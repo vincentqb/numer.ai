@@ -4,60 +4,92 @@
 "uncomment the appropriate lines to save processed data to disk"
 
 import pandas as pd
+from time import clock
+
+### Load data
+
+input_file = 'dataset/numerai_training_data.csv'
+
+start = clock()
+data = pd.read_csv(input_file)
+print('Loaded {:d} entries in {:.0f} seconds.'.format( 
+    len(data), clock() - start))
+
+### Validation set is more reprensentative of tournament data
+
+# Identify validation set
+iv = data.validation == 1
+
+# Validation flag no longer needed
+data.drop( 'validation', axis = 1 , inplace = True )
+
+# Split train into test and train
+test_data = data[iv].copy()
+train_data = data[~iv].copy()
+
+# Separate data and target label
+train_target = train_data['target']
+train_data.drop('target', axis = 1, inplace = True)
+test_target = test_data['target']
+test_data.drop('target', axis = 1, inplace = True)
+
+### One-hot encode of categorical variable
+
+# Encode column in train, then drop original column
+train_dummies = pd.get_dummies(train_data['c1'])
+train_data = pd.concat((train_data.drop('c1', axis = 1), train_dummies.astype(int)), axis = 1)
+
+# Encode column in test, then drop original column
+test_dummies = pd.get_dummies(test_data['c1'])
+test_data = pd.concat((test_data.drop('c1', axis = 1), test_dummies.astype(int)), axis = 1)
+
+### Select classifier
 
 from sklearn.ensemble import RandomForestClassifier as RF
+rf = RF(n_estimators = 10, verbose = True)
+
+# Classifiers from Scikit Flow
+# Optimizer choices: SGD, Adam, Adagrad
+
+from skflow import TensorFlowLinearClassifier
+tflc = TensorFlowLinearClassifier(n_classes = 1, batch_size = 256, steps = 1400, learning_rate = 0.01, optimizer = 'Adagrad')
+
+from skflow import TensorFlowLinearRegressor
+tflr = TensorFlowLinearRegressor(n_classes = 1, batch_size = 256, steps = 1400, learning_rate = 0.01, optimizer = 'Adagrad')
+
+from skflow import TensorFlowDNNClassifier
+tfdnnc = TensorFlowDNNClassifier(hidden_units = [100, 200, 200, 200, 200, 200, 100],
+                                    n_classes = 1, batch_size = 256, steps = 1000, learning_rate = 0.01, optimizer = 'Adagrad')
+
+clfs = [rf, tflc, tflr, tfdnnc]
+
+### Fit, extrapolate, measure error
+
 from sklearn.metrics import roc_auc_score as AUC
 from sklearn.metrics import accuracy_score as accuracy
 
-input_file = 'data/orig/numerai_training_data.csv'
+for clf in clfs:
 
-#
+    # Fit
+    start = clock()
+    rf.fit(train_data, train_target)
+    print("Fitted in {:.0f} seconds.".format(clock() - start))
 
-d = pd.read_csv( input_file )
+    # Extrapolate
+    start = clock()
+    predict = rf.predict_proba(test_data)
+    predict_bin = rf.predict(test_data)
+    print("Extrapolated in {:.0f} seconds.".format(clock() - start))
+    
+    # Compute ROC AUC and accuracy
+    acc = accuracy(test_target.values, predict_bin)
+    auc = AUC(test_target.values, predict[:,1])
+    print "AUC: {:.2%}. Accuracy: {:.2%}.".format(auc, acc)
 
-# indices for validation examples
-iv = d.validation == 1
+"""
+Results
 
-val = d[iv].copy()
-train = d[~iv].copy()
-
-# no need for validation flag anymore
-train.drop( 'validation', axis = 1 , inplace = True )
-
-# move the target column to front
-cols = train.columns
-cols = cols.insert( 0, 'target' )
-cols = cols[:-1]
-
-train = train[cols]
-val = val[cols]
-
-# train.to_csv( 'data/train_v.csv', index = False )
-# val.to_csv( 'data/test_v.csv', index = None )
-
-# encode the categorical variable as one-hot, drop the original column afterwards
-
-train_dummies = pd.get_dummies( train.c1 )
-train_num = pd.concat(( train.drop( 'c1', axis = 1 ), train_dummies.astype( int )), axis = 1 )
-# train_num.to_csv( 'data/train_v_num.csv', index = False )
-
-val_dummies = pd.get_dummies( val.c1 )
-val_num = pd.concat(( val.drop( 'c1', axis = 1 ), val_dummies.astype(int) ), axis = 1 )
-# val_num.to_csv( 'data/test_v_num.csv', index = False )
-
-# train, predict, evaluate
-
-n_trees = 100
-
-rf = RF( n_estimators = n_trees, verbose = True )
-rf.fit( train_num.drop( 'target', axis = 1 ), train_num.target )
-
-p = rf.predict_proba( val_num.drop( 'target', axis = 1 ))
-p_bin = rf.predict( val_num.drop( 'target', axis = 1 ))
-
-acc = accuracy( val_num.target.values, p_bin )
-auc = AUC( val_num.target.values, p[:,1] )
-print "AUC: {:.2%}, accuracy: {:.2%}".format( auc, acc )
-	
-# AUC: 51.40%, accuracy: 51.14%	/ 100 trees
-# AUC: 52.16%, accuracy: 51.62%	/ 1000 trees
+RF(n_estimators = 10, verbose = True)
+Fitted in 3 seconds. Extrapolated in 0 seconds.
+AUC: 50.67%. Accuracy: 49.67%.
+"""
