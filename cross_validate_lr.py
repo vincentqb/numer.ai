@@ -31,7 +31,6 @@ train = pd.concat((train_frame.drop('c1', axis = 1), train_dummies.astype(float)
 
 ### Select transformer
 
-from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import Normalizer, MinMaxScaler, StandardScaler
 
 transformers = [ MinMaxScaler(), StandardScaler(), 
