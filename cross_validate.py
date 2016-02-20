@@ -7,6 +7,7 @@ Cross-validation with a few classifiers.
 import pandas as pd
 import numpy as np
 from time import clock
+from itertools import product
 
 ### Load and prepare data
 
@@ -31,14 +32,13 @@ train = pd.concat((train_frame.drop('c1', axis = 1), train_dummies.astype(int)),
 
 ### Select classifiers
 
+clfs = []
+
 from sklearn.ensemble import RandomForestClassifier as RF
 rf1 = RF(n_estimators = 10, verbose = True)
 rf2 = RF(n_estimators = 100, verbose = True)
 rf3 = RF(n_estimators = 1000, verbose = True)
 rf4 = RF(n_estimators = 10000, verbose = True)
-
-from sklearn.linear_model import LogisticRegression as LR
-lr = LR()
 
 from sklearn.linear_model import SGDClassifier
 sgd = SGDClassifier()
@@ -49,6 +49,19 @@ lsvc = LinearSVC(tol = 0.01, C = 1)
 from sklearn.ensemble import ExtraTreesClassifier
 etc2 = ExtraTreesClassifier(n_estimators = 100, max_depth = None, min_samples_split = 1, random_state = 0)
 etc3 = ExtraTreesClassifier(n_estimators = 1000, max_depth = None, min_samples_split = 1, random_state = 0)
+
+# Logistic regression
+
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import Normalizer, MinMaxScaler, StandardScaler
+from sklearn.linear_model import LogisticRegression as LR
+
+lr = LR()
+
+transformers = [ MinMaxScaler(), StandardScaler(), 
+                 Normalizer( norm = 'l1' ), Normalizer( norm = 'l2' ) ]
+
+clfs += product(transformers, [LR()])
 
 # Classifiers from Scikit Flow
 # Optimizer choices: SGD, Adam, Adagrad
@@ -63,16 +76,15 @@ from skflow import TensorFlowDNNClassifier
 tfdnnc = TensorFlowDNNClassifier(hidden_units = [100, 200, 200, 200, 100],
                                     n_classes = 1, batch_size = 256, steps = 1000, learning_rate = 0.01, optimizer = 'Adagrad')
 
-# clfs = [lr, lsvc, sgd, rf1, rf2, rf3, rf4, etc2, etc3]
-clfs = [rf4]
-# clfs = [tflc, tflr, tfdnnc]
+clfs += [lr, lsvc, sgd, rf1, rf2, rf3, rf4, etc2, etc3]
+# clfs += [tflc, tflr, tfdnnc]
 
 ### Cross validation
 
 from sklearn.cross_validation import cross_val_score
 
 for clf in clfs:
-    print clf
+    print(clf)
     start = clock()
     scores = cross_val_score(clf, train, label, scoring = 'roc_auc', cv = 10, verbose = 1)
     print(
@@ -132,4 +144,20 @@ ExtraTreesClassifier(bootstrap=False, compute_importances=None,
            n_estimators=1000, n_jobs=1, oob_score=False, random_state=0,
            verbose=0)
 Performed 10-fold cross validation in 1433 seconds with ROC AUC: mean 0.5255 std 0.0067.
+
+LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+          intercept_scaling=1, penalty=l2, random_state=None, tol=0.0001)
+Performed 10-fold cross validation in 3 seconds with ROC AUC: mean 0.5254 std 0.0044.
+
+MinMaxScaler(copy=True, feature_range=(0, 1))
+Performed 10-fold cross validation in 4 seconds with ROC AUC: mean 0.5354 std 0.0062.
+
+StandardScaler(copy=True, with_mean=True, with_std=True)
+Performed 10-fold cross validation in 5 seconds with ROC AUC: mean 0.5354 std 0.0062.
+
+Normalizer(copy=True, norm=l1)
+Performed 10-fold cross validation in 3 seconds with ROC AUC: mean 0.5254 std 0.0049.
+
+Normalizer(copy=True, norm=l2)
+Performed 10-fold cross validation in 3 seconds with ROC AUC: mean 0.5261 std 0.0051.
 """
