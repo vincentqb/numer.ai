@@ -48,6 +48,19 @@ test_data = pd.concat((test_data.drop('c1', axis = 1), test_dummies.astype(int))
 from sklearn.ensemble import RandomForestClassifier as RF
 rf = RF(n_estimators = 10, verbose = True)
 
+# Logistic regression
+
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import Normalizer, MinMaxScaler, StandardScaler
+from sklearn.linear_model import LogisticRegression as LR
+
+lr = LR()
+
+transformers = [ MinMaxScaler(), StandardScaler(), 
+                 Normalizer( norm = 'l1' ), Normalizer( norm = 'l2' ) ]
+
+clfs += [make_pipeline(p) for p in product(transformers, [LR()])]
+
 # Classifiers from Scikit Flow
 # Optimizer choices: SGD, Adam, Adagrad
 

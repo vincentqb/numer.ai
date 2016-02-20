@@ -61,7 +61,7 @@ lr = LR()
 transformers = [ MinMaxScaler(), StandardScaler(), 
                  Normalizer( norm = 'l1' ), Normalizer( norm = 'l2' ) ]
 
-clfs += product(transformers, [LR()])
+clfs += [make_pipeline(p) for p in product(transformers, [LR()])]
 
 # Classifiers from Scikit Flow
 # Optimizer choices: SGD, Adam, Adagrad
