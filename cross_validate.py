@@ -50,7 +50,7 @@ from sklearn.ensemble import ExtraTreesClassifier
 etc2 = ExtraTreesClassifier(n_estimators = 100, max_depth = None, min_samples_split = 1, random_state = 0)
 etc3 = ExtraTreesClassifier(n_estimators = 1000, max_depth = None, min_samples_split = 1, random_state = 0)
 
-# Logistic regression
+# Logistic regression with preprocessor
 
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import Normalizer, MinMaxScaler, StandardScaler

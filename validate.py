@@ -48,7 +48,7 @@ test_data = pd.concat((test_data.drop('c1', axis = 1), test_dummies.astype(int))
 from sklearn.ensemble import RandomForestClassifier as RF
 rf = RF(n_estimators = 10, verbose = True)
 
-# Logistic regression
+# Logistic regression with preprocessor
 
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import Normalizer, MinMaxScaler, StandardScaler
